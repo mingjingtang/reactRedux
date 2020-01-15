@@ -1,34 +1,39 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner'
+import './index.css';
 
 
 class App extends React.Component{
-    constructor(props){
-        super(props);
+    state = {lat: null, errorMessage: ''};
 
-        //THIS IS THE ONLY TIME we do direct assignment to this.state
-        this.state = {lat: null, errorMessage: ''};
-
+    componentDidMount(){
         window.navigator.geolocation.getCurrentPosition(
-            (position) => {
-                //WE CALLED SETSTATE!!
-                this.setState({lat: position.coords.latitude});
-            },
-            (err) => {
-                this.setState({errorMessage: err.message});
-            }
+            position => this.setState({lat: position.coords.latitude}),
+            err => this.setState({errorMessage: err.message})
         );
     }
 
-    render(){
+    renderContent(){
         if(this.state.errorMessage && ! this.state.lat){
             return <div>Error: {this.state.errorMessage}</div>
         }
         if(!this.state.errorMessage && this.state.lat){
-            return <div>Latitude: {this.state.lat}</div>
+            return <SeasonDisplay
+                        lat = {this.state.lat}
+                    />
         }
 
-        return <div>Loading</div>
+        return <Spinner message = "please click the allow!"/>;
+    }
+
+    render(){
+        return (
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
     }
 }
 
