@@ -3,15 +3,16 @@ import SearchBar from './SearchBar';
 import youtube from '../apis/youtube';
 import VideoList from '../components/VideoList'
 
+
 class App extends React.Component{
     state = {videos: [] };
 
-    onTermSubmit = async term =>{
+    onTermSubmit = async (term) =>{
         const response = await youtube.get('/search',{
             params:{
                 q: term
             }
-        });
+        })
 
         this.setState({videos: response.data.items});
     };
